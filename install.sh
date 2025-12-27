@@ -37,7 +37,7 @@ cp -r html/* /var/www/html/
 
 # Set permissions
 echo "Setting permissions..."
-chown -R www-data:www-data /var/www/html
+chown -R ec2-user:ec2-user /var/www/html
 chmod -R 755 /var/www/html
 
 # Copy Nginx configuration
