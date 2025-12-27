@@ -17,12 +17,12 @@ fi
 
 # Update system
 echo "Updating system packages..."
-apt-get update
-apt-get upgrade -y
+dnf update -y
+dnf upgrade -y
 
 # Install Nginx
 echo "Installing Nginx..."
-apt-get install nginx -y
+dnf install nginx -y
 
 # Create directory structure
 echo "Creating directory structure..."
