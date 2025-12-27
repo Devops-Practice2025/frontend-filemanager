@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Manager - Nginx Static Site</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="images/favicon.ico">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-server"></i>
+                <h1>File Manager</h1>
+                <span class="server-badge">Nginx</span>
+            </div>
+            <div class="nav-links">
+                <a href="#upload"><i class="fas fa-upload"></i> Upload</a>
+                <a href="#files"><i class="fas fa-files"></i> Files</a>
+                <a href="#search"><i class="fas fa-search"></i> Search</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1><i class="fas fa-cloud"></i> Static File Manager</h1>
+            <p class="subtitle">Upload, Search, and Manage Files - Served by Nginx</p>
+            <div class="server-info">
+                <div class="info-item">
+                    <i class="fas fa-bolt"></i>
+                    <span>Powered by Nginx Web Server</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>100% Browser-Based (No Backend)</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Works on All Devices</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Upload Section -->
+        <section id="upload" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-cloud-upload-alt"></i>
+                Upload Files
+            </h2>
+            <div class="upload-container">
+                <div class="upload-area" id="dropZone">
+                    <div class="upload-icon">
+                        <i class="fas fa-file-upload fa-3x"></i>
+                    </div>
+                    <h3>Drag & Drop Files Here</h3>
+                    <p>or click to browse files</p>
+                    <p class="file-types">Supports: PDF, Images, Documents, Archives</p>
+                    <input type="file" id="fileInput" multiple class="hidden-input">
+                    <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-folder-open"></i> Select Files
+                    </button>
+                    <div id="selectedFiles" class="selected-files"></div>
+                </div>
+                
+                <div class="upload-actions">
+                    <button class="btn btn-success" onclick="uploadFiles()">
+                        <i class="fas fa-upload"></i> Upload Selected Files
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearSelection()">
+                        <i class="fas fa-times"></i> Clear Selection
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section id="search" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-search"></i>
+                Search Files
+            </h2>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" 
+                           id="searchInput" 
+                           placeholder="Search by file name, type, or size..."
+                           onkeyup="searchFiles()">
+                    <button class="search-btn" onclick="searchFiles()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="search-filters">
+                    <span class="filter-label">Filter by:</span>
+                    <div class="filter-tags">
+                        <span class="filter-tag active" onclick="filterFiles('all')">All</span>
+                        <span class="filter-tag" onclick="filterFiles('pdf')">PDF</span>
+                        <span class="filter-tag" onclick="filterFiles('image')">Images</span>
+                        <span class="filter-tag" onclick="filterFiles('document')">Documents</span>
+                        <span class="filter-tag" onclick="filterFiles('archive')">Archives</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Files Section -->
+        <section id="files" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-folder"></i>
+                Your Files
+                <span class="file-count" id="fileCount">0 files</span>
+            </h2>
+            
+            <!-- Status Messages -->
+            <div id="statusMessage" class="status-message"></div>
+            
+            <!-- Files Grid -->
+            <div class="files-grid" id="filesGrid">
+                <!-- Files will be added here by JavaScript -->
+                <div class="empty-state">
+                    <i class="fas fa-folder-open fa-3x"></i>
+                    <h3>No Files Yet</h3>
+                    <p>Upload your first file to get started!</p>
+                </div>
+            </div>
+
+            <!-- Files Table (Alternative View) -->
+            <div class="files-table-container">
+                <table class="files-table" id="filesTable">
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>Upload Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="filesTableBody">
+                        <!-- Files will be added here by JavaScript -->
+                        <tr>
+                            <td colspan="5" class="empty-table">
+                                <i class="fas fa-inbox"></i> No files uploaded yet
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="section info-section">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle"></i>
+                How This Works
+            </h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3>Nginx Web Server</h3>
+                    <p>This site is served by Nginx - a fast, efficient web server that delivers static files.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-browser"></i>
+                    </div>
+                    <h3>Browser-Based</h3>
+                    <p>All file operations happen in your browser. Files are stored in memory temporarily.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>No Backend</h3>
+                    <p>No server-side processing. Everything runs locally in your web browser.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>Download to Save</h3>
+                    <p>To keep files permanently, download them to your computer.</p>
+                </div>
+            </div>
+            
+            <div class="nginx-info">
+                <h3><i class="fas fa-terminal"></i> Nginx Server Info</h3>
+                <div class="code-block">
+                    <code>Server: nginx/1.18.0</code><br>
+                    <code>Port: 8080</code><br>
+                    <code>Document Root: /var/www/html</code><br>
+                    <code>Static File Serving: Enabled</code>
+                </div>
+                <p class="note">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Note:</strong> This is a demonstration. Files are stored in browser memory only.
+                    For production use, you would need a backend server.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-file-alt"></i> File Manager</h3>
+                <p>A static file management interface served by Nginx</p>
+            </div>
+            <div class="footer-section">
+                <h3><i class="fas fa-cogs"></i> Technologies</h3>
+                <ul>
+                    <li>Nginx Web Server</li>
+                    <li>HTML5 & CSS3</li>
+                    <li>JavaScript (ES6)</li>
+                    <li>Font Awesome Icons</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3><i class="fas fa-external-link-alt"></i> Quick Links</h3>
+                <ul>
+                    <li><a href="#upload">Upload Files</a></li>
+                    <li><a href="#files">View Files</a></li>
+                    <li><a href="#search">Search Files</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Static File Manager • Served by Nginx • Demo Version</p>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="filePreviewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="previewTitle">File Preview</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="previewContent">
+                <!-- Preview content goes here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-question-circle"></i> Help & Instructions</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4>Getting Started</h4>
+                <ol>
+                    <li>Click "Select Files" or drag files to the upload area</li>
+                    <li>Click "Upload Selected Files" to add them to the list</li>
+                    <li>Use the search box to find files by name</li>
+                    <li>Click the download button to save files to your computer</li>
+                </ol>
+                
+                <h4>Important Notes</h4>
+                <ul>
+                    <li>Files are stored in your browser's memory only</li>
+                    <li>Close the browser tab to clear all files</li>
+                    <li>Download files to save them permanently</li>
+                    <li>This is served by Nginx as static content</li>
+                </ul>
+                
+                <h4>Nginx Configuration</h4>
+                <p>This site is configured to be served from:</p>
+                <code>/var/www/html</code>
+                <p>Nginx handles all file serving and static content delivery.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="js/file-manager.js"></script>
+    <script src="js/utils.js"></script>
+</body>
+</html>
